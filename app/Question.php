@@ -42,7 +42,7 @@ class Question extends Model
 
     public function getBodyHtmlAttribute()
     {
-        return \Parsedown::instance()->text($this->body);
+        return $this->bodyHtml();
     }
 
     public function acceptBestAnswer(Answer $answer)
@@ -73,6 +73,19 @@ class Question extends Model
     public function getFavoritesCountAttribute()
     {
         return $this->favorites->count();
+    }
+
+    public function getExcerptAttribute()
+    {
+        return $this->excerpt(300);
+    }
+
+    private function bodyHtml(){
+        return clean(\Parsedown::instance()->text($this->body));
+    }
+
+    public function excerpt($length){
+        return str_limit(strip_tags($this->bodyHtml()), $length);
     }
 
 
